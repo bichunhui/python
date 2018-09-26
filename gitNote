@@ -1,0 +1,272 @@
+sudo apt-get install git
+
+
+在创建好的目录下操作：
+1：初始化一个git仓库，使用git init命令
+添加文件到git仓库，两步：
+1：使用命令git add <file>  //可反复多次使用，添加多个文件
+2：使用命令git commit -m <message>,完成
+
+
+要随时掌握工作区的状态，使用git status命令。
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容
+
+
+git log --pretty=oneline    //版本日志，按行显示
+$ git reset --hard HEAD^   //版本回退
+git reflog     //记录你的每一次命令的编号
+git reset --hard a2c7  //利用每次改动的编号进行穿梭
+
+命令git checkout -- readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，readme.txt自修改
+后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；
+
+readme.txt已经添加到暂存区后，又作了修改，现在，使用git reset HEAD readme.txt,撤销修改就回到添加
+到暂存区后的状态,然后使用git checkout -- readme.txt,撤销修改，总之，就是让这个文件回到最近一次
+git commit或git add时的状态
+
+
+删除文件：
+一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了，现在你有两个选择，一是确
+实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit
+
+另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：
+$ git checkout -- test.txt
+git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”
+
+1 :  git remote add origin git@github.com:fanjile/python.git
+git remote set-url origin git@github.com:fanjile/python.git
+git remote rm origin   //如果不对就删掉重来
+2 :  git push -u origin master
+git push origin master    //从现在起，直接使用这个命令就可以推送了
+
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch <name>
+
+切换分支：git checkout <name>
+
+创建+切换分支：git checkout -b <name>
+
+合并某分支到当前分支：git merge <name>   //name为某分支
+
+删除分支：git branch -d <name>
+
+
+Git分支十分强大，在团队开发中应该充分应用。
+
+合并分支时，加上--no-ff参数（git merge --no-ff -m "merge with no-ff" dev）就可以用普通模式合并，
+合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。
+
+
+修复错误时，我们会通过创建新的错误分支进行修复，然后合并，最后删除;
+
+当手头工作没有完成时，工作先把现场git stash一下，然后去修复的bug，修复后，再git stash pop，回到
+工作现场
+
+开发一个新feature，最好新建一个分支；
+
+如果要丢弃一个没有被合并过的分支，可以通过git branch -D <name>强行删除。
+
+
+
+多人协作
+阅读: 499211
+当你从远程仓库克隆时，实际上Git自动把本地的master分支和远程的master分支对应起来了，并且，远程仓
+库的默认名称是origin。
+
+要查看远程库的信息，用git remote：
+
+$ git remote
+origin
+或者，用git remote -v显示更详细的信息：
+
+$ git remote -v
+origin  git@github.com:michaelliao/learngit.git (fetch)
+origin  git@github.com:michaelliao/learngit.git (push)
+上面显示了可以抓取和推送的origin的地址。如果没有推送权限，就看不到push的地址。
+
+推送分支
+推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分
+支推送到远程库对应的远程分支上：
+
+$ git push origin master
+如果要推送其他分支，比如dev，就改成：
+
+$ git push origin dev
+但是，并不是一定要把本地分支往远程推送，那么，哪些分支需要推送，哪些不需要呢？
+
+master分支是主分支，因此要时刻与远程同步；
+
+dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
+
+bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
+
+feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+
+总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！
+
+抓取分支
+多人协作时，大家都会往master和dev分支上推送各自的修改。
+
+现在，模拟一个你的小伙伴，可以在另一台电脑（注意要把SSH Key添加到GitHub）或者同一台电脑的另一个
+目录下克隆：
+
+$ git clone git@github.com:michaelliao/learngit.git
+Cloning into 'learngit'...
+remote: Counting objects: 40, done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 40 (delta 14), reused 40 (delta 14), pack-reused 0
+Receiving objects: 100% (40/40), done.
+Resolving deltas: 100% (14/14), done.
+当你的小伙伴从远程库clone时，默认情况下，你的小伙伴只能看到本地的master分支。不信可以用git 
+branch命令看看：
+
+$ git branch
+* master
+现在，你的小伙伴要在dev分支上开发，就必须创建远程origin的dev分支到本地，于是他用这个命令创建本地
+dev分支：
+
+$ git checkout -b dev origin/dev
+现在，他就可以在dev上继续修改，然后，时不时地把dev分支push到远程：
+
+$ git add env.txt
+
+$ git commit -m "add env"
+[dev 7a5e5dd] add env
+ 1 file changed, 1 insertion(+)
+ create mode 100644 env.txt
+
+$ git push origin dev
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 308 bytes | 308.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To github.com:michaelliao/learngit.git
+   f52c633..7a5e5dd  dev -> dev
+ 你的小伙伴已经向origin/dev分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送：
+
+$ cat env.txt
+env
+
+$ git add env.txt
+
+$ git commit -m "add new env"
+[dev 7bd91f1] add new env
+ 1 file changed, 1 insertion(+)
+ create mode 100644 env.txt
+
+$ git push origin dev
+To github.com:michaelliao/learngit.git
+ ! [rejected]        dev -> dev (non-fast-forward)
+error: failed to push some refs to 'git@github.com:michaelliao/learngit.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，Git已经提示我们，
+先用git pull把最新的提交从origin/dev抓下来，然后，在本地合并，解决冲突，再推送：
+
+$ git pull
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/<branch> dev
+git pull也失败了，原因是没有指定本地dev分支与远程origin/dev分支的链接，根据提示，设置dev和
+origin/dev的链接：
+
+$ git branch --set-upstream-to=origin/dev dev
+Branch 'dev' set up to track remote branch 'dev' from 'origin'.
+再pull：
+
+$ git pull
+Auto-merging env.txt
+CONFLICT (add/add): Merge conflict in env.txt
+Automatic merge failed; fix conflicts and then commit the result.
+这回git pull成功，但是合并有冲突，需要手动解决，解决的方法和分支管理中的解决冲突完全一样。解决后
+，提交，再push：
+
+$ git commit -m "fix env conflict"
+[dev 57c53ab] fix env conflict
+
+$ git push origin dev
+Counting objects: 6, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 621 bytes | 621.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0)
+To github.com:michaelliao/learngit.git
+   7a5e5dd..57c53ab  dev -> dev
+ 因此，多人协作的工作模式通常是这样：
+
+首先，可以试图用git push origin <branch-name>推送自己的修改；
+
+如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+
+如果合并有冲突，则解决冲突，并在本地提交；
+
+没有冲突或者解决掉冲突后，再用git push origin <branch-name>推送就能成功！
+
+如果git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令git 
+branch --set-upstream-to <branch-name> origin/<branch-name>。
+
+这就是多人协作的工作模式，一旦熟悉了，就非常简单。
+
+小结
+查看远程库信息，使用git remote -v；
+
+本地新建的分支如果不推送到远程，对其他人就是不可见的；
+
+从本地推送分支，使用git push origin branch-name，如果推送失败，先用git pull抓取远程的新提交；
+
+在本地创建和远程分支对应的分支，使用git checkout -b branch-name origin/branch-name，本地和远程分
+支的名称最好一致；
+
+建立本地分支和远程分支的关联，使用git branch --set-upstream branch-name origin/branch-name；
+
+从远程抓取分支，使用git pull，如果有冲突，要先处理冲突。
+
+
+
+“请把上周一的那个版本打包发布，版本号是v1.2”
+
+“好的，按照tag v1.2查找commit就行！”
+
+所以，tag就是一个让人容易记住的有意义的名字，它跟某个commit绑在一起
+
+
+
+
+命令git tag <tagname>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+
+命令git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+
+命令git tag可以查看所有标签
+
+
+
+
+命令git push origin <tagname>可以推送一个本地标签；
+
+命令git push origin --tags可以推送全部未推送过的本地标签；
+
+命令git tag -d <tagname>可以删除一个本地标签；
+
+命令git push origin :refs/tags/<tagname>可以删除一个远程标签
+
+
+
+
+在GitHub上，可以任意Fork开源仓库；
+
+自己拥有Fork后的仓库的读写权限；
+
+可以推送pull request给官方仓库来贡献代码
