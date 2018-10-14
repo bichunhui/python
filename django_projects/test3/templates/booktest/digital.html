@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>digital</title>
+</head>
+<body>
+{{list}}
+{% for one in list %}
+<!--{{forloop.counter}}-->
+<!--<h1>{{one}}</h1> <br>-->
+{% if forloop.counter > 2 %}
+<h2>{{one}}</h2>
+{% endif %}
+{% empty %}
+<h1>empty</h1>
+{% endfor %}
+</body>
+</html>
