@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/ihome/login.js"></script>
+    <!--<script>-->
+    <!--function getCookie(name){-->
+        <!--var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");-->
+        <!--return r ? r[1] : undefined;-->
+    <!--}-->
+
+    <!--function xsrfPost(){-->
+        <!--alert("hahatt");-->
+        <!--var xsrf = getCookie("_xsrf");-->
+        <!--alert(xsrf);-->
+        <!--var data = {-->
+            <!--key1: 1,-->
+            <!--key2: 2-->
+        <!--}-->
+        <!--var json_data = JSON.stringify(data);-->
+        <!--alert("xsrfPost");-->
+        <!--$.ajax({-->
+            <!--url: "/login",-->
+            <!--method: "POST",-->
+            <!--headers: {-->
+                <!--"X-XSRFTOKEN": xsrf,-->
+            <!--},-->
+            <!--data: json_data,-->
+            <!--contentType: "application/json",-->
+            <!--dataType:json,-->
+            <!--success: function(data){-->
+                <!--alert(data.a);-->
+                <!--alert("OK");-->
+            <!--}-->
+        <!--})-->
+    <!--}-->
+
+
+
+    <!--</script>-->
+</head>
+<body>
+<!--<a href="javascript:;" onclick="xsrfPost()">发送post请求</a>-->
+<form id="form-login">
+    <input type="number" name="mobile", id="mobile" placeholder="手机号">
+    <div id="mobile-err"><span></span></div>
+    <br>
+    <br>
+    <input type="password" name="password" id="password" placeholder="密码">
+    <div id="password-err"><span></span></div>
+    <br>
+    <br>
+    <button type="submit">登录</button>
+    <p>没有帐号,<a href="/register.html">立即注册</a></p>
+</form>
+</body>
+</html>
